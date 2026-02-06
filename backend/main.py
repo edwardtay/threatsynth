@@ -66,7 +66,7 @@ app = FastAPI(
 )
 
 # ---------------------------------------------------------------------------
-# CORS middleware (permissive for hackathon)
+# CORS middleware (permissive for development)
 # ---------------------------------------------------------------------------
 
 app.add_middleware(

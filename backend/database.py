@@ -24,7 +24,7 @@ from sqlalchemy.orm import DeclarativeBase, relationship, sessionmaker
 # Database path and engine
 # ---------------------------------------------------------------------------
 
-DB_DIR = Path("/home/ed0x/deriv-ai-hackathon/data")
+DB_DIR = Path(__file__).resolve().parent.parent / "data"
 DB_DIR.mkdir(parents=True, exist_ok=True)
 
 DB_PATH = DB_DIR / "pentester.db"

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-cd /home/ed0x/deriv-ai-hackathon/frontend
+cd "$(dirname "$0")"
 echo "[*] Installing dependencies..."
 npm install
 echo "[*] Dependencies installed. Run 'npm run dev' to start the dev server."

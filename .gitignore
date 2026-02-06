@@ -13,6 +13,7 @@ node_modules/
 .vite/
 
 # Database
+data/
 *.db
 *.db-journal
 
@@ -34,3 +35,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Vercel
+.vercel
+
+# Presentation build artifacts
+presentation/*.pdf
+presentation/*.png
