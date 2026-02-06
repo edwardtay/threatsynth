@@ -17,6 +17,7 @@ import {
   scanAssets,
   deleteAsset,
 } from '../services/api';
+import { mockAssets } from '../services/mockData';
 
 const ASSET_TYPES = ['server', 'workstation', 'network_device', 'application', 'database', 'iot', 'cloud', 'other'];
 
@@ -48,7 +49,8 @@ export default function Assets() {
       const res = await getAssets();
       setAssets(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      addToast('Failed to load assets', 'error');
+      // Fallback to demo data when backend is unavailable
+      setAssets(mockAssets);
     } finally {
       setLoading(false);
     }

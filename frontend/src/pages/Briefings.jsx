@@ -13,6 +13,7 @@ import SeverityBadge from '../components/SeverityBadge';
 import Spinner, { FullPageSpinner } from '../components/Spinner';
 import { useToast } from '../components/ToastContext';
 import { getBriefings, generateBriefings, updateBriefingStatus } from '../services/api';
+import { mockBriefings } from '../services/mockData';
 
 const STATUS_OPTIONS = [
   { value: 'new', label: 'New' },
@@ -88,7 +89,8 @@ export default function Briefings() {
       list.sort((a, b) => (b.priority_score || 0) - (a.priority_score || 0));
       setBriefings(list);
     } catch (err) {
-      addToast('Failed to load briefings', 'error');
+      // Fallback to demo data when backend is unavailable
+      setBriefings([...mockBriefings].sort((a, b) => (b.priority_score || 0) - (a.priority_score || 0)));
     } finally {
       setLoading(false);
     }

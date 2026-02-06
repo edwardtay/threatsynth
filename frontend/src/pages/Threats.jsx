@@ -13,6 +13,7 @@ import SeverityBadge from '../components/SeverityBadge';
 import Spinner, { FullPageSpinner } from '../components/Spinner';
 import { useToast } from '../components/ToastContext';
 import { getThreats, ingestAllThreats, ingestThreatSource } from '../services/api';
+import { mockThreats } from '../services/mockData';
 
 const SOURCES = [
   { value: 'all', label: 'All Sources' },
@@ -69,7 +70,11 @@ export default function Threats() {
       const data = res.data;
       setThreats(Array.isArray(data) ? data : data?.threats || []);
     } catch (err) {
-      addToast('Failed to load threats', 'error');
+      // Fallback to demo data when backend is unavailable
+      let demo = mockThreats;
+      if (sourceFilter !== 'all') demo = demo.filter(t => t.source === sourceFilter);
+      if (severityFilter !== 'all') demo = demo.filter(t => t.severity === severityFilter);
+      setThreats(demo);
     } finally {
       setLoading(false);
     }

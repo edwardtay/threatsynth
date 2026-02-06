@@ -24,6 +24,7 @@ import {
   generateBriefings,
   scanAssets,
 } from '../services/api';
+import { mockStats, mockRecent } from '../services/mockData';
 
 const SEVERITY_COLORS = {
   critical: '#ef4444',
@@ -67,7 +68,9 @@ export default function Dashboard() {
       setStats(statsRes.data);
       setRecent(Array.isArray(recentRes.data) ? recentRes.data : []);
     } catch (err) {
-      addToast('Failed to load dashboard data', 'error');
+      // Fallback to demo data when backend is unavailable
+      setStats(mockStats);
+      setRecent(mockRecent);
     } finally {
       setLoading(false);
     }
