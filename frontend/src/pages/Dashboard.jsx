@@ -11,7 +11,7 @@ import {
   Radar,
   ChevronRight,
 } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 import StatCard from '../components/StatCard';
 import SeverityBadge from '../components/SeverityBadge';
@@ -92,16 +92,11 @@ export default function Dashboard() {
 
   if (loading) return <FullPageSpinner message="Loading dashboard..." />;
 
-  // Build severity distribution for pie chart
+  // Build severity distribution for pie chart from stats
   const severityData = [];
-  if (recent.length > 0) {
-    const counts = {};
-    recent.forEach((b) => {
-      const sev = b.threat?.severity || 'unknown';
-      counts[sev] = (counts[sev] || 0) + 1;
-    });
-    Object.entries(counts).forEach(([name, value]) => {
-      severityData.push({ name, value });
+  if (stats?.severity_breakdown) {
+    Object.entries(stats.severity_breakdown).forEach(([name, value]) => {
+      if (value > 0) severityData.push({ name, value });
     });
   }
 
@@ -268,6 +263,37 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Source Breakdown */}
+      {stats?.source_breakdown && Object.values(stats.source_breakdown).some(v => v > 0) && (
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <h2 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">
+            Threat Intelligence Sources
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {Object.entries(stats.source_breakdown).map(([src, count]) => {
+              const colors = {
+                nvd: 'border-blue-500/30 text-blue-400',
+                cisa_kev: 'border-red-500/30 text-red-400',
+                exploitdb: 'border-orange-500/30 text-orange-400',
+                github: 'border-purple-500/30 text-purple-400',
+                shodan: 'border-cyan-500/30 text-cyan-400',
+                greynoise: 'border-green-500/30 text-green-400',
+              };
+              const labels = {
+                nvd: 'NVD', cisa_kev: 'CISA KEV', exploitdb: 'ExploitDB',
+                github: 'GitHub', shodan: 'Shodan', greynoise: 'GreyNoise',
+              };
+              return (
+                <div key={src} className={`bg-gray-800/50 border rounded-lg p-3 text-center ${colors[src] || 'border-gray-700 text-gray-400'}`}>
+                  <p className="text-2xl font-bold">{count}</p>
+                  <p className="text-[10px] uppercase tracking-wider mt-1 opacity-70">{labels[src] || src}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Quick Actions Bar */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">

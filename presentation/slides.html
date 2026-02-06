@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThreatSynth AI — Deriv AI Talent Sprint</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<style>
+  :root { --r-background-color: #0a0e1a; --r-main-color: #e2e8f0; --r-heading-color: #f8fafc; }
+  .reveal { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
+  .reveal h1, .reveal h2, .reveal h3 { font-weight: 700; text-transform: none; }
+  .reveal h1 { font-size: 2.4em; }
+  .reveal h2 { font-size: 1.8em; }
+  .accent { color: #38bdf8; }
+  .accent-red { color: #f87171; }
+  .accent-green { color: #4ade80; }
+  .accent-yellow { color: #fbbf24; }
+  .accent-purple { color: #a78bfa; }
+  .pill { display: inline-block; padding: 4px 14px; border-radius: 999px; font-size: 0.55em; font-weight: 600; margin: 0 4px; }
+  .pill-red { background: rgba(248,113,113,0.2); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+  .pill-blue { background: rgba(56,189,248,0.2); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+  .pill-green { background: rgba(74,222,128,0.2); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+  .pill-yellow { background: rgba(251,191,36,0.2); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 30px 0; }
+  .stat-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px 16px; text-align: center; }
+  .stat-box .num { font-size: 2.2em; font-weight: 800; line-height: 1.1; }
+  .stat-box .label { font-size: 0.55em; color: #94a3b8; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  .arch-box { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); border-radius: 10px; padding: 16px 20px; margin: 8px 0; text-align: left; font-size: 0.6em; }
+  .arch-box h4 { margin: 0 0 6px 0; color: #38bdf8; font-size: 1.1em; }
+  .arch-box p { margin: 0; color: #cbd5e1; }
+  .code-block { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px 20px; text-align: left; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.48em; line-height: 1.6; color: #e2e8f0; overflow-x: auto; }
+  .code-block .comment { color: #64748b; }
+  .code-block .key { color: #38bdf8; }
+  .code-block .str { color: #4ade80; }
+  .code-block .num { color: #fbbf24; font-size: 1em; font-weight: 400; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; text-align: left; }
+  .pipeline { display: flex; gap: 10px; margin: 20px 0; align-items: stretch; }
+  .pipeline-step { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 12px; text-align: center; position: relative; }
+  .pipeline-step .step-num { font-size: 0.5em; color: #38bdf8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .pipeline-step .step-title { font-size: 0.65em; font-weight: 700; margin: 6px 0 4px; }
+  .pipeline-step .step-tools { font-size: 0.42em; color: #94a3b8; }
+  .pipeline-arrow { display: flex; align-items: center; color: #38bdf8; font-size: 1.2em; }
+  .threat-row { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: rgba(255,255,255,0.03); border-radius: 8px; margin: 6px 0; font-size: 0.55em; text-align: left; }
+  .threat-sev { font-weight: 700; font-size: 0.8em; padding: 3px 10px; border-radius: 6px; text-transform: uppercase; min-width: 70px; text-align: center; }
+  .sev-critical { background: rgba(248,113,113,0.2); color: #f87171; }
+  .sev-high { background: rgba(251,191,36,0.2); color: #fbbf24; }
+  .subtitle { color: #94a3b8; font-size: 0.7em; margin-top: 8px; }
+  .logo-text { font-size: 0.5em; letter-spacing: 3px; text-transform: uppercase; color: #38bdf8; font-weight: 600; margin-bottom: 12px; }
+  .reveal ul { font-size: 0.7em; }
+  .reveal li { margin-bottom: 10px; }
+  .source-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+  .source-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; text-align: center; }
+  .source-card .src-name { font-size: 0.6em; font-weight: 700; margin-bottom: 4px; }
+  .source-card .src-count { font-size: 1.4em; font-weight: 800; }
+  .source-card .src-type { font-size: 0.4em; color: #94a3b8; }
+  .briefing-card { background: linear-gradient(135deg, rgba(248,113,113,0.08), rgba(56,189,248,0.08)); border: 1px solid rgba(248,113,113,0.2); border-radius: 12px; padding: 20px; text-align: left; margin: 10px 0; font-size: 0.55em; }
+  .briefing-card .bf-score { font-size: 1.8em; font-weight: 800; color: #f87171; float: right; }
+  .briefing-card .bf-title { font-weight: 700; font-size: 1.1em; margin-bottom: 8px; }
+  .briefing-card .bf-body { color: #cbd5e1; line-height: 1.5; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin: 2px; }
+  .diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; font-size: 0.6em; text-align: left; }
+  .diff-item { padding: 16px; border-radius: 10px; }
+  .diff-item h4 { margin: 0 0 8px 0; font-size: 1.1em; }
+  .diff-item p { margin: 0; color: #cbd5e1; font-size: 0.9em; }
+  .diff-us { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.2); }
+  .diff-them { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); }
+  .footer-note { position: fixed; bottom: 20px; left: 0; right: 0; text-align: center; font-size: 0.35em; color: #475569; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- SLIDE 1: Title -->
+<section>
+  <div class="logo-text">ThreatSynth AI</div>
+  <h1>Threat<span class="accent">Synth</span> AI</h1>
+  <p class="subtitle">Autonomous AI-Powered Penetration Testing<br>& Threat Intelligence Platform</p>
+  <br>
+  <div>
+    <span class="pill pill-red">Pentest Automation</span>
+    <span class="pill pill-blue">Threat Intelligence</span>
+    <span class="pill pill-green">AI Briefings</span>
+  </div>
+</section>
+
+<!-- SLIDE 2: The Problem -->
+<section>
+  <h2>The <span class="accent-red">Problem</span></h2>
+  <br>
+  <div class="stat-grid">
+    <div class="stat-box">
+      <div class="num accent-red">3,500+</div>
+      <div class="label">New CVEs per month (2025)</div>
+    </div>
+    <div class="stat-box">
+      <div class="num accent-yellow">$4.88M</div>
+      <div class="label">Avg cost of data breach</div>
+    </div>
+    <div class="stat-box">
+      <div class="num accent-purple">277 days</div>
+      <div class="label">Avg time to detect breach</div>
+    </div>
+  </div>
+  <br>
+  <p style="font-size:0.65em; color:#94a3b8;">Security teams juggle <strong style="color:#f87171;">disconnected tools</strong> — vulnerability scanners, threat feeds, pentest frameworks, and report generators — with <strong style="color:#f87171;">no unified intelligence layer</strong></p>
+</section>
+
+<!-- SLIDE 3: Our Solution -->
+<section>
+  <h2>Our <span class="accent">Solution</span></h2>
+  <br>
+  <p style="font-size:0.7em;">One platform that <span class="accent">ingests threats</span>, <span class="accent">scans infrastructure</span>, <span class="accent">validates exploits</span>, and <span class="accent">generates briefings</span> — autonomously.</p>
+  <br>
+  <div class="two-col">
+    <div class="arch-box">
+      <h4>Threat Intelligence Engine</h4>
+      <p>6 real-time sources (NVD, CISA KEV, ExploitDB, GitHub, Shodan CVE DB, EPSS) auto-correlated with your asset inventory</p>
+    </div>
+    <div class="arch-box">
+      <h4>Multi-Agent Pentest Pipeline</h4>
+      <p>4-phase autonomous assessment: Recon → Vulnerability Scan → Exploit Validation → AI Report Generation</p>
+    </div>
+    <div class="arch-box">
+      <h4>Human-in-the-Loop</h4>
+      <p>Mandatory approval gate before active exploitation — AI suggests, humans decide</p>
+    </div>
+    <div class="arch-box">
+      <h4>AI-Powered Briefings</h4>
+      <p>LLM generates executive summaries, remediation steps, and business impact analysis per threat-asset pair</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: Architecture -->
+<section>
+  <h2><span class="accent">Architecture</span></h2>
+  <br>
+  <div class="pipeline">
+    <div class="pipeline-step">
+      <div class="step-num">Phase 1</div>
+      <div class="step-title">Recon Agent</div>
+      <div class="step-tools">nmap &bull; whatweb<br>wafw00f &bull; gobuster</div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="step-num">Phase 2</div>
+      <div class="step-title">Vuln Scanner</div>
+      <div class="step-tools">nikto &bull; sqlmap<br>security headers</div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step" style="border-color: rgba(251,191,36,0.4);">
+      <div class="step-num" style="color:#fbbf24;">Phase 3</div>
+      <div class="step-title">Exploit Validator</div>
+      <div class="step-tools">SQLi &bull; XSS &bull; CMDi<br><span style="color:#fbbf24;">⚠ Human Approval Gate</span></div>
+    </div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step">
+      <div class="step-num">Phase 4</div>
+      <div class="step-title">AI Reporter</div>
+      <div class="step-tools">LLM analysis<br>executive reports</div>
+    </div>
+  </div>
+  <br>
+  <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+    <span class="pill pill-blue">React 19 + Tailwind</span>
+    <span class="pill pill-green">FastAPI + SQLAlchemy</span>
+    <span class="pill pill-yellow">Ollama (Local LLM)</span>
+    <span class="pill pill-red">WebSocket Streaming</span>
+    <span class="pill pill-blue">Docker Compose</span>
+  </div>
+</section>
+
+<!-- SLIDE 5: Threat Intel Live Demo -->
+<section>
+  <h2><span class="accent">Live</span> Threat Intelligence</h2>
+  <p style="font-size:0.55em; color:#94a3b8;">6 real APIs • No fake data • All free, no API keys required</p>
+  <div class="source-grid">
+    <div class="source-card">
+      <div class="src-name accent">NVD</div>
+      <div class="src-count">20</div>
+      <div class="src-type">National Vulnerability Database</div>
+    </div>
+    <div class="source-card">
+      <div class="src-name accent-red">CISA KEV</div>
+      <div class="src-count">30</div>
+      <div class="src-type">Known Exploited Vulns</div>
+    </div>
+    <div class="source-card">
+      <div class="src-name accent-yellow">ExploitDB</div>
+      <div class="src-count">19</div>
+      <div class="src-type">Public Exploits (GitLab CSV)</div>
+    </div>
+    <div class="source-card">
+      <div class="src-name accent-purple">GitHub</div>
+      <div class="src-count">20</div>
+      <div class="src-type">Security Advisories</div>
+    </div>
+    <div class="source-card">
+      <div class="src-name accent-green">Shodan CVE DB</div>
+      <div class="src-count">9</div>
+      <div class="src-type">KEV + EPSS + Ransomware</div>
+    </div>
+    <div class="source-card">
+      <div class="src-name" style="color:#f472b6;">FIRST EPSS</div>
+      <div class="src-count">20</div>
+      <div class="src-type">Exploit Prediction Scoring</div>
+    </div>
+  </div>
+  <div style="font-size: 0.7em; margin-top: 10px;">
+    <span class="accent" style="font-size: 1.8em; font-weight: 800;">118</span> <span style="color:#94a3b8;">real threats ingested</span> &nbsp;•&nbsp;
+    <span class="accent-red" style="font-size: 1.8em; font-weight: 800;">56</span> <span style="color:#94a3b8;">critical</span> &nbsp;•&nbsp;
+    <span class="accent-yellow" style="font-size: 1.8em; font-weight: 800;">59</span> <span style="color:#94a3b8;">actively exploited</span>
+  </div>
+</section>
+
+<!-- SLIDE 6: Asset-Threat Correlation Demo -->
+<section>
+  <h2>AI <span class="accent">Correlation</span> & Briefings</h2>
+  <p style="font-size:0.55em; color:#94a3b8;">Threats auto-matched to your asset inventory → AI generates actionable briefings</p>
+  <br>
+  <div class="threat-row">
+    <div class="threat-sev sev-critical">CRITICAL</div>
+    <div><strong>CVE-2024-23897</strong> → <span class="accent">ci-runner-01</span> (Jenkins 2.426)</div>
+    <div style="margin-left:auto; color: #f87171; font-weight:700;">10.0</div>
+  </div>
+  <div class="threat-row">
+    <div class="threat-sev sev-critical">CRITICAL</div>
+    <div><strong>CVE-2021-22205</strong> → <span class="accent">git-server</span> (GitLab 16.5)</div>
+    <div style="margin-left:auto; color: #f87171; font-weight:700;">10.0</div>
+  </div>
+  <div class="threat-row">
+    <div class="threat-sev sev-critical">CRITICAL</div>
+    <div><strong>CVE-2020-1938</strong> → <span class="accent">web-server-01</span> (Apache 2.4.54)</div>
+    <div style="margin-left:auto; color: #f87171; font-weight:700;">10.0</div>
+  </div>
+  <div class="threat-row">
+    <div class="threat-sev sev-high">HIGH</div>
+    <div><strong>CVE-2019-17558</strong> → <span class="accent">web-server-01</span> (Apache httpd)</div>
+    <div style="margin-left:auto; color: #fbbf24; font-weight:700;">9.0</div>
+  </div>
+  <br>
+  <div class="briefing-card">
+    <div class="bf-score">10/10</div>
+    <div class="bf-title">CVE-2024-23897 → Jenkins ci-runner-01</div>
+    <div class="bf-body">
+      Jenkins 2.441 and earlier allows unauthorized file read via CLI. Affects ci-runner-01 on port 8080.<br>
+      <strong style="color:#4ade80;">Remediation:</strong> Update to Jenkins 2.442+, restrict CLI access, rotate credentials.<br>
+      <strong style="color:#fbbf24;">Impact:</strong> Source code theft, credential exfiltration, supply chain compromise.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: What Makes Us Different -->
+<section>
+  <h2>Why <span class="accent">ThreatSynth</span>?</h2>
+  <br>
+  <div class="diff-grid">
+    <div class="diff-item diff-them">
+      <h4 style="color:#94a3b8;">Traditional Tools</h4>
+      <p>Separate vulnerability scanners, threat feeds, pentest frameworks, and reporting tools. Manual correlation. Delayed response.</p>
+    </div>
+    <div class="diff-item diff-us">
+      <h4 class="accent-green">ThreatSynth AI</h4>
+      <p>Unified platform: ingest → correlate → scan → exploit → report. AI-powered. Real-time. One command.</p>
+    </div>
+    <div class="diff-item diff-us">
+      <h4 class="accent-green">Self-Hosted & Private</h4>
+      <p>Local LLM via Ollama. No data leaves your network. Perfect for regulated industries (defense, healthcare, finance).</p>
+    </div>
+    <div class="diff-item diff-us">
+      <h4 class="accent-green">Responsible AI</h4>
+      <p>Human-in-the-loop approval before exploitation. AI advises, humans authorize. Full audit trail via WebSocket logs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: Tech Stack -->
+<section>
+  <h2><span class="accent">Tech</span> Stack</h2>
+  <br>
+  <div class="code-block">
+<span class="comment"># Frontend</span>
+<span class="key">React 19</span> + <span class="key">React Router 7</span> + <span class="key">Tailwind CSS 4</span> + <span class="key">Recharts</span> + <span class="key">Lucide Icons</span>
+
+<span class="comment"># Backend</span>
+<span class="key">FastAPI</span> (async) + <span class="key">SQLAlchemy</span> (async ORM) + <span class="key">SQLite</span> + <span class="key">WebSockets</span>
+
+<span class="comment"># AI / LLM</span>
+<span class="key">Ollama</span> → <span class="str">gemma3:4b</span> (local, private, no API key)
+
+<span class="comment"># Security Tools</span>
+<span class="key">nmap</span> · <span class="key">whatweb</span> · <span class="key">wafw00f</span> · <span class="key">gobuster</span> · <span class="key">nikto</span> · <span class="key">sqlmap</span>
+
+<span class="comment"># Threat Intel APIs (all free, no keys)</span>
+<span class="key">NVD</span> · <span class="key">CISA KEV</span> · <span class="key">ExploitDB</span> · <span class="key">GitHub Advisories</span> · <span class="key">Shodan CVE DB</span> · <span class="key">FIRST EPSS</span>
+
+<span class="comment"># Infrastructure</span>
+<span class="key">Docker Compose</span> + <span class="key">DVWA</span> (safe vulnerable test target)
+  </div>
+</section>
+
+<!-- SLIDE 9: Business Value -->
+<section>
+  <h2>Business <span class="accent">Value</span></h2>
+  <br>
+  <div class="stat-grid">
+    <div class="stat-box">
+      <div class="num accent-green">90%</div>
+      <div class="label">Reduction in manual triage time</div>
+    </div>
+    <div class="stat-box">
+      <div class="num accent">6</div>
+      <div class="label">Intel sources auto-correlated</div>
+    </div>
+    <div class="stat-box">
+      <div class="num accent-yellow">$0</div>
+      <div class="label">API cost (all free sources)</div>
+    </div>
+  </div>
+  <br>
+  <ul>
+    <li><strong>For SOC Teams:</strong> Automated threat-to-asset correlation eliminates hours of manual CVE triage</li>
+    <li><strong>For Pentesters:</strong> 4-phase autonomous pipeline with human oversight — faster assessments, better coverage</li>
+    <li><strong>For Executives:</strong> AI-generated briefings with priority scores, remediation steps, and business impact</li>
+    <li><strong>For Compliance:</strong> Full audit trail, approval gates, self-hosted — meets regulatory requirements</li>
+  </ul>
+</section>
+
+<!-- SLIDE 10: Thank You -->
+<section>
+  <div class="logo-text">ThreatSynth AI</div>
+  <h1>Threat<span class="accent">Synth</span> AI</h1>
+  <br>
+  <p style="font-size: 0.7em; color: #94a3b8;">
+    Autonomous Security Intelligence.<br>
+    Real Threats. Real APIs. Real Protection.
+  </p>
+  <br>
+  <div>
+    <span class="pill pill-blue">github.com/edwardtay/threatsynth</span>
+  </div>
+  <br>
+  <p style="font-size: 0.5em; color: #475569;">MIT Licensed &bull; Built with FastAPI + React + Ollama</p>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: true,
+    width: 1280,
+    height: 720,
+  });
+</script>
+</body>
+</html>

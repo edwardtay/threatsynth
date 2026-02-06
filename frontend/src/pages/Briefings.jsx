@@ -82,10 +82,11 @@ export default function Briefings() {
   const fetchBriefings = async () => {
     try {
       const res = await getBriefings();
-      const data = Array.isArray(res.data) ? res.data : [];
+      const raw = res.data;
+      const list = Array.isArray(raw) ? raw : raw?.briefings || [];
       // Sort by priority_score descending
-      data.sort((a, b) => (b.priority_score || 0) - (a.priority_score || 0));
-      setBriefings(data);
+      list.sort((a, b) => (b.priority_score || 0) - (a.priority_score || 0));
+      setBriefings(list);
     } catch (err) {
       addToast('Failed to load briefings', 'error');
     } finally {

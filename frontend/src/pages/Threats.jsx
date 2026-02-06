@@ -66,7 +66,8 @@ export default function Threats() {
         source: sourceFilter,
         severity: severityFilter,
       });
-      setThreats(Array.isArray(res.data) ? res.data : []);
+      const data = res.data;
+      setThreats(Array.isArray(data) ? data : data?.threats || []);
     } catch (err) {
       addToast('Failed to load threats', 'error');
     } finally {
@@ -308,7 +309,7 @@ export default function Threats() {
                                   Details
                                 </h4>
                                 <p className="text-sm text-gray-300 leading-relaxed">
-                                  {threat.title}
+                                  {threat.description || threat.title}
                                 </p>
                                 <div className="mt-3 flex items-center gap-4 flex-wrap">
                                   <div className="text-xs text-gray-500">
@@ -327,6 +328,24 @@ export default function Threats() {
                                       <span className="font-mono font-bold">
                                         {threat.cvss_score.toFixed(1)}
                                       </span>
+                                    </div>
+                                  )}
+                                  {threat.affected_vendor && (
+                                    <div className="text-xs text-gray-500">
+                                      <span className="text-gray-400">Vendor:</span>{' '}
+                                      <span className="font-mono text-cyan-400">{threat.affected_vendor}</span>
+                                    </div>
+                                  )}
+                                  {threat.affected_product && (
+                                    <div className="text-xs text-gray-500">
+                                      <span className="text-gray-400">Product:</span>{' '}
+                                      <span className="font-mono text-cyan-400">{threat.affected_product}</span>
+                                    </div>
+                                  )}
+                                  {threat.affected_version && (
+                                    <div className="text-xs text-gray-500">
+                                      <span className="text-gray-400">Version:</span>{' '}
+                                      <span className="font-mono">{threat.affected_version}</span>
                                     </div>
                                   )}
                                 </div>

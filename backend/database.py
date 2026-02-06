@@ -1,7 +1,7 @@
 """
-Database setup and ORM models for the AI Pentester.
+Database setup and ORM models for the AI Pentester & Threat Intel Synthesizer.
 
-Models: Target, ScanJob, Finding, Report, AgentLog
+Models: Target, ScanJob, Finding, Report, AgentLog, Asset, Threat, Briefing
 """
 
 from datetime import datetime, timezone
@@ -232,6 +232,117 @@ class AgentLog(Base):
             "phase": self.phase,
             "log_type": self.log_type,
             "message": self.message,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+# ---------------------------------------------------------------------------
+# Asset (Threat Intelligence)
+# ---------------------------------------------------------------------------
+
+class Asset(Base):
+    __tablename__ = "assets"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)
+    type = Column(String(50), nullable=False, default="service")
+    vendor = Column(String(255), nullable=True)
+    product = Column(String(255), nullable=True)
+    version = Column(String(100), nullable=True)
+    port = Column(Integer, nullable=True)
+    network = Column(String(255), nullable=True)
+    created_at = Column(DateTime, default=_utcnow, nullable=False)
+
+    briefings = relationship("Briefing", back_populates="asset", lazy="selectin", cascade="all, delete-orphan")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "type": self.type,
+            "vendor": self.vendor,
+            "product": self.product,
+            "version": self.version,
+            "port": self.port,
+            "network": self.network,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+# ---------------------------------------------------------------------------
+# Threat (Threat Intelligence)
+# ---------------------------------------------------------------------------
+
+class Threat(Base):
+    __tablename__ = "threats"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    source = Column(String(50), nullable=False)
+    source_id = Column(String(255), nullable=True)
+    title = Column(String(1024), nullable=False)
+    description = Column(Text, nullable=True)
+    severity = Column(String(20), nullable=False, default="medium")
+    cvss_score = Column(Float, nullable=True)
+    affected_vendor = Column(String(255), nullable=True)
+    affected_product = Column(String(255), nullable=True)
+    affected_version = Column(String(255), nullable=True)
+    exploits_available = Column(Boolean, default=False, nullable=False)
+    actively_exploited = Column(Boolean, default=False, nullable=False)
+    published_date = Column(DateTime, nullable=True)
+    raw_data = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=_utcnow, nullable=False)
+
+    briefings = relationship("Briefing", back_populates="threat", lazy="selectin", cascade="all, delete-orphan")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "source": self.source,
+            "source_id": self.source_id,
+            "title": self.title,
+            "description": self.description,
+            "severity": self.severity,
+            "cvss_score": self.cvss_score,
+            "affected_vendor": self.affected_vendor,
+            "affected_product": self.affected_product,
+            "affected_version": self.affected_version,
+            "exploits_available": self.exploits_available,
+            "actively_exploited": self.actively_exploited,
+            "published_date": self.published_date.isoformat() if self.published_date else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+# ---------------------------------------------------------------------------
+# Briefing (AI-generated threat intelligence briefing)
+# ---------------------------------------------------------------------------
+
+class Briefing(Base):
+    __tablename__ = "briefings"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    threat_id = Column(Integer, ForeignKey("threats.id", ondelete="CASCADE"), nullable=False, index=True)
+    asset_id = Column(Integer, ForeignKey("assets.id", ondelete="CASCADE"), nullable=False, index=True)
+    summary = Column(Text, nullable=True)
+    remediation = Column(Text, nullable=True)
+    business_impact = Column(Text, nullable=True)
+    priority_score = Column(Float, nullable=False, default=0.0)
+    status = Column(String(30), nullable=False, default="new")
+    created_at = Column(DateTime, default=_utcnow, nullable=False)
+
+    threat = relationship("Threat", back_populates="briefings")
+    asset = relationship("Asset", back_populates="briefings")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "threat_id": self.threat_id,
+            "asset_id": self.asset_id,
+            "summary": self.summary,
+            "remediation": self.remediation,
+            "business_impact": self.business_impact,
+            "priority_score": self.priority_score,
+            "status": self.status,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
 
