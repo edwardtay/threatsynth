@@ -1,0 +1,7 @@
+api/
+backend/
+presentation/
+data/
+venv/
+e2e_test.py
+docker-compose.yml
