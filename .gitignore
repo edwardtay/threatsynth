@@ -39,6 +39,9 @@ Thumbs.db
 # Vercel
 .vercel
 
+# Wrangler
+.wrangler/
+
 # Presentation build artifacts
 presentation/*.pdf
 presentation/*.png

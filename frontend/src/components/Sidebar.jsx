@@ -57,11 +57,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Status indicator */}
-      <div className="px-4 py-4 border-t border-gray-800 space-y-3">
-        <div className="px-2 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20">
-          <p className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider">Demo Mode</p>
-          <p className="text-[10px] text-amber-400/60 mt-0.5 leading-snug">Showing sample data. Deploy with backend for live intel.</p>
-        </div>
+      <div className="px-4 py-4 border-t border-gray-800">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Activity className="w-3.5 h-3.5 text-green-500" />
           <span>System Online</span>

@@ -1,0 +1,11 @@
+name = "threatsynth-api"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "threatsynth-db"
+database_id = "231bc554-33cd-4b4f-a646-f6b8c64aef22"
+
+[ai]
+binding = "AI"
