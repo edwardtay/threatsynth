@@ -6,7 +6,10 @@ import {
   FileText,
   ShieldCheck,
   Activity,
+  LogOut,
+  User,
 } from 'lucide-react';
+import { useAuth } from './AuthContext';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -16,6 +19,8 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const { user, logout } = useAuth();
+
   return (
     <aside className="fixed left-0 top-0 h-screen w-60 bg-gray-950 border-r border-gray-800 flex flex-col z-40">
       {/* Logo / Brand */}
@@ -56,8 +61,26 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Status indicator */}
-      <div className="px-4 py-4 border-t border-gray-800">
+      {/* User info + logout */}
+      <div className="px-4 py-4 border-t border-gray-800 space-y-3">
+        {user && (
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-purple-500/15 border border-purple-500/25 flex items-center justify-center shrink-0">
+              <User className="w-4 h-4 text-purple-400" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-medium text-gray-200 truncate">{user.name}</p>
+              <p className="text-[10px] text-gray-500 truncate">{user.email}</p>
+            </div>
+            <button
+              onClick={logout}
+              className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors shrink-0"
+              title="Sign out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        )}
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Activity className="w-3.5 h-3.5 text-green-500" />
           <span>System Online</span>
